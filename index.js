@@ -14,7 +14,7 @@ app.get('/', (request, response) => {
 //Auth&Register routes
 app.post('/auth/register', UserController.registerController);
 app.post('/auth/login', checkAuth, UserController.authController);
-app.get('auth/me', UserController.getMeController);
+app.get('/auth/me', checkAuth, UserController.getMeController);
 
 app.listen(PORT, () => {
   console.log(`Server started on ${PORT} port`);

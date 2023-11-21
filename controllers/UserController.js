@@ -87,4 +87,15 @@ export const authController = async (request, response) => {
     });
   }
 };
-export const getMeController = async (request, response) => {};
+export const getMeController = async (request, response) => {
+  try {
+    const { userId } = request;
+    console.log(userId);
+    const user = await pool.query(`select * from users where id=$1`, [userId]);
+    response.status(200).json({
+      user: user.rows[0],
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};

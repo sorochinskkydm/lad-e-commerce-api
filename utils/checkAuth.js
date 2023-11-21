@@ -14,7 +14,7 @@ export default async (request, response, next) => {
       });
     }
   } else {
-    return response.status(403).json({
+    return response.status(401).json({
       message: 'Ошибка авторизации',
     });
   }
