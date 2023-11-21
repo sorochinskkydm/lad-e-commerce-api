@@ -1,5 +1,6 @@
 import express from 'express';
 import * as UserController from './controllers/UserController.js';
+import checkAuth from './utils/checkAuth.js';
 
 const PORT = process.env.PORT || 8080;
 const app = express();
@@ -12,7 +13,8 @@ app.get('/', (request, response) => {
 
 //Auth&Register routes
 app.post('/auth/register', UserController.registerController);
-app.post('/auth/login', UserController.authController);
+app.post('/auth/login', checkAuth, UserController.authController);
+app.get('auth/me', UserController.getMeController);
 
 app.listen(PORT, () => {
   console.log(`Server started on ${PORT} port`);

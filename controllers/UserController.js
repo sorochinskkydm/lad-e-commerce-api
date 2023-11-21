@@ -87,3 +87,4 @@ export const authController = async (request, response) => {
     });
   }
 };
+export const getMeController = async (request, response) => {};
