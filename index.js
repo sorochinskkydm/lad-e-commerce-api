@@ -20,15 +20,20 @@ app.post('/api/auth/register', UserController.registerController);
 app.post('/api/auth/login', checkAuth, UserController.authController);
 app.get('/api/users/me', checkAuth, UserController.getMeController);
 
-//Goods routes
-app.get('/api/goods', GoodsController.getGoods);
-app.get('/api/goods/:id', GoodsController.getGoodById);
-
-//Admin routes
+//Admin customers routes
 app.get('/api/customers', checkAuth, checkRole, CustomersController.getCustomers);
 app.get('/api/customers/:id', checkAuth, checkRole, CustomersController.getCustomerById);
 app.put('/api/customers/:id', checkAuth, checkRole, CustomersController.updateCustomer);
 app.delete('/api/customers/:id', checkAuth, checkRole, CustomersController.deleteCustomer);
+
+//Goods routes
+app.get('/api/goods', GoodsController.getGoods);
+app.get('/api/goods/:id', GoodsController.getGoodById);
+
+//Admin goods routes
+app.post('/api/goods', checkAuth, checkRole, GoodsController.addGoods);
+app.put('/api/goods/:id', checkAuth, checkRole, GoodsController.updateGoods);
+app.delete('/api/goods/:id', checkAuth, checkRole, GoodsController.removeGoods);
 
 app.listen(PORT, () => {
   console.log(`Server started on ${PORT} port`);
