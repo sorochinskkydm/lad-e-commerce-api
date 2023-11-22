@@ -20,6 +20,7 @@ export const registerController = async (request, response) => {
       const token = jwt.sign(
         {
           id: user.rows[0].id,
+          role: user.rows[0].role_id,
         },
         'someDifficultKey',
         {
@@ -69,6 +70,7 @@ export const authController = async (request, response) => {
     const token = jwt.sign(
       {
         id: user.rows[0].id,
+        role: user.rows[0].role_id,
       },
       'someDifficultKey',
       {
