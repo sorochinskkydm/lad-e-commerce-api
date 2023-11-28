@@ -1,4 +1,5 @@
 import { pool } from '../db.js';
+import { validationResult } from 'express-validator';
 
 export const getGoods = async (request, response) => {
   try {
@@ -35,6 +36,11 @@ export const getGoodById = async (request, response) => {
 
 export const addGoods = async (request, response) => {
   try {
+    //Проверка правильности ввода данных
+    const errors = validationResult(request);
+    if (!errors.isEmpty()) {
+      return response.status(400).json(errors.array());
+    }
     const { title, producer_id, type_id, price, description } = request.body;
     const good = await pool.query(
       `insert into goods (title, producer_id, type_id, price, description) values ($1, $2, $3, $4, $5)`,
@@ -53,6 +59,11 @@ export const addGoods = async (request, response) => {
 };
 export const updateGoods = async (request, response) => {
   try {
+    //Проверка правильности ввода данных
+    const errors = validationResult(request);
+    if (!errors.isEmpty()) {
+      return response.status(400).json(errors.array());
+    }
     const id = request.params.id;
     const { title, producer_id, type_id, price, description } = request.body;
     const goods = await pool.query(

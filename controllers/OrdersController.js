@@ -1,6 +1,7 @@
 import { pool } from '../db.js';
 import jwt from 'jsonwebtoken';
 import { v1 } from 'uuid';
+import { validationResult } from 'express-validator';
 
 export const createAnOrder = async (request, response) => {
   try {
@@ -78,6 +79,11 @@ export const getOrders = async (request, response) => {
 
 export const updateOrder = async (request, response) => {
   try {
+    //Проверка правильности ввода данных
+    const errors = validationResult(request);
+    if (!errors.isEmpty()) {
+      return response.status(400).json(errors.array());
+    }
     const id = request.params.id;
     const { user_id, count } = request.body;
     const orders = await pool.query(`update orders set user_id = $1, count = $2 where id = $3`, [

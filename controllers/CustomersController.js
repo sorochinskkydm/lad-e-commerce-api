@@ -1,4 +1,5 @@
 import { pool } from '../db.js';
+import { validationResult } from 'express-validator';
 
 export const getCustomers = async (request, response) => {
   try {
@@ -36,6 +37,11 @@ export const getCustomerById = async (request, response) => {
 
 export const updateCustomer = async (request, response) => {
   try {
+    //Проверка правильности ввода данных
+    const errors = validationResult(request);
+    if (!errors.isEmpty()) {
+      return response.status(400).json(errors.array());
+    }
     const id = request.params.id;
     const { lastname, firstname, surname, email, password } = request.body;
     const customer = await pool.query(

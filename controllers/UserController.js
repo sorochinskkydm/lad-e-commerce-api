@@ -1,9 +1,15 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
+import { validationResult } from 'express-validator';
 import { pool } from '../db.js';
 
 export const registerController = async (request, response) => {
   try {
+    //Проверка правильности ввода данных
+    const errors = validationResult(request);
+    if (!errors.isEmpty()) {
+      return response.status(400).json(errors.array());
+    }
     const { lastname, firstname, surname, email, password } = request.body;
     //Проверка на наличие адреса в БД
     const checkEmail = await pool.query(`select * from users where email = $1`, [email]);
@@ -47,6 +53,11 @@ export const registerController = async (request, response) => {
 
 export const authController = async (request, response) => {
   try {
+    //Проверка правильности ввода данных
+    const errors = validationResult(request);
+    if (!errors.isEmpty()) {
+      return response.status(400).json(errors.array());
+    }
     const { email, password } = request.body;
     //Выборка пользователя из БД
     const user = await pool.query(`select * from users where email = $1`, [email]);

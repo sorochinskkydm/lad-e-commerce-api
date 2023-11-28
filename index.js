@@ -5,6 +5,16 @@ import * as CustomersController from './controllers/CustomersController.js';
 import * as CartController from './controllers/CartController.js';
 import * as OrdersController from './controllers/OrdersController.js';
 
+import {
+  registerValidator,
+  authValidator,
+  updateCustomersValidator,
+  addGoodsValidator,
+  updateGoodsValidator,
+  addToCartValidator,
+  updateOrderValidator,
+} from './validations/validations.js';
+
 import checkAuth from './utils/checkAuth.js';
 import checkRole from './utils/checkRole.js';
 
@@ -18,14 +28,20 @@ app.get('/', (request, response) => {
 });
 
 //Auth&Register routes
-app.post('/api/auth/register', UserController.registerController);
-app.post('/api/auth/login', checkAuth, UserController.authController);
+app.post('/api/auth/register', registerValidator, UserController.registerController);
+app.post('/api/auth/login', authValidator, checkAuth, UserController.authController);
 app.get('/api/users/me', checkAuth, UserController.getMeController);
 
 //Admin customers routes
 app.get('/api/customers', checkAuth, checkRole, CustomersController.getCustomers);
 app.get('/api/customers/:id', checkAuth, checkRole, CustomersController.getCustomerById);
-app.put('/api/customers/:id', checkAuth, checkRole, CustomersController.updateCustomer);
+app.put(
+  '/api/customers/:id',
+  updateCustomersValidator,
+  checkAuth,
+  checkRole,
+  CustomersController.updateCustomer,
+);
 app.delete('/api/customers/:id', checkAuth, checkRole, CustomersController.deleteCustomer);
 
 //Goods routes
@@ -33,13 +49,13 @@ app.get('/api/goods', GoodsController.getGoods);
 app.get('/api/goods/:id', GoodsController.getGoodById);
 
 //Admin goods routes
-app.post('/api/goods', checkAuth, checkRole, GoodsController.addGoods);
-app.put('/api/goods/:id', checkAuth, checkRole, GoodsController.updateGoods);
+app.post('/api/goods', addGoodsValidator, checkAuth, checkRole, GoodsController.addGoods);
+app.put('/api/goods/:id', updateGoodsValidator, checkAuth, checkRole, GoodsController.updateGoods);
 app.delete('/api/goods/:id', checkAuth, checkRole, GoodsController.removeGoods);
 
 //Cart routes
 app.get('/api/cart', checkAuth, CartController.getCart);
-app.post('/api/cart', checkAuth, CartController.addToCart);
+app.post('/api/cart', addToCartValidator, checkAuth, CartController.addToCart);
 
 //Orders routes
 app.post('/api/orders', checkAuth, OrdersController.createAnOrder);
@@ -47,7 +63,13 @@ app.get('/api/orders/:id', checkAuth, OrdersController.getOrdersById);
 
 //Admin orders routes
 app.get('/api/orders', checkAuth, checkRole, OrdersController.getOrders);
-app.put('/api/orders/:id', checkAuth, checkRole, OrdersController.updateOrder);
+app.put(
+  '/api/orders/:id',
+  updateOrderValidator,
+  checkAuth,
+  checkRole,
+  OrdersController.updateOrder,
+);
 app.delete('/api/orders/:id', checkAuth, checkRole, OrdersController.deleteOrder);
 
 app.listen(PORT, () => {

@@ -1,8 +1,14 @@
 import { pool } from '../db.js';
 import jwt from 'jsonwebtoken';
+import { validationResult } from 'express-validator';
 
 export const addToCart = async (request, response) => {
   try {
+    //Проверка правильности ввода данных
+    const errors = validationResult(request);
+    if (!errors.isEmpty()) {
+      return response.status(400).json(errors.array());
+    }
     const token = (request.headers.authorization || '').replace(/Bearer\s/, '');
     const decodedToken = jwt.decode(token, 'someDifficultKey');
     const user_id = decodedToken.id;
