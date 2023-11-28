@@ -72,6 +72,7 @@ export const updateGoods = async (request, response) => {
 export const removeGoods = async (request, response) => {
   try {
     const id = request.params.id;
+    const good_id = await pool.query(`select id from goods where id=$1`, [id]);
     const goods = await pool.query('delete from goods where id=$1', [id]);
     response.status(200).json({
       message: 'successfully deleted',
